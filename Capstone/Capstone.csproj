@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DAL\CampgroundDAL.cs" />
     <Compile Include="DAL\ParkDAL.cs" />
     <Compile Include="Models\Campground.cs" />
     <Compile Include="Models\Park.cs" />

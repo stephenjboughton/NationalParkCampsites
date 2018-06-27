@@ -50,6 +50,7 @@ namespace Capstone.Models
 					{
 						//Call sub menu for park info
 						subPark.DisplayParkInfo(parks[parkSelection]);
+
 					}
 					else
 					{
