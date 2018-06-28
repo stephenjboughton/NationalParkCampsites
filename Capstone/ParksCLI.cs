@@ -17,6 +17,8 @@ namespace Capstone.Models
 
 		public void RunCLI()
 		{
+			Console.Clear();
+
 			//Calls method to show header
 			ShowHeader();
 
@@ -50,6 +52,7 @@ namespace Capstone.Models
 					{
 						//Call sub menu for park info
 						subPark.DisplayParkInfo(parks[parkSelection]);
+
 					}
 					else
 					{

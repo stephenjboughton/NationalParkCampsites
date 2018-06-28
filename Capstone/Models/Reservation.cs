@@ -8,5 +8,6 @@ namespace Capstone.Models
 {
 	class Reservation
 	{
+
 	}
 }

@@ -44,7 +44,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DAL\CampgroundDAL.cs" />
     <Compile Include="DAL\ParkDAL.cs" />
+    <Compile Include="DAL\SiteDAL.cs" />
     <Compile Include="Models\Campground.cs" />
     <Compile Include="Models\Park.cs" />
     <Compile Include="ParksCLI.cs" />
@@ -52,6 +54,7 @@
     <Compile Include="Models\Site.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SiteSearchCLI.cs" />
     <Compile Include="SubParkInfoCLI.cs" />
   </ItemGroup>
   <ItemGroup>
