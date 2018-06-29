@@ -31,7 +31,10 @@ namespace Capstone
 			int campgroundChoice;
 			string fromDate, toDate;
 
+			// Calls method to show all of the campgrounds
 			ChooseACampground(out campgroundChoice, out fromDate, out toDate);
+
+		
 
 			//Calls DAL to build a dictionary of sites available for specified date range
 			SiteDAL siteDal = new SiteDAL(DatabaseConnection);
@@ -64,11 +67,27 @@ namespace Capstone
 					site.Value.Utilities.ToString().PadRight(15) +
 					(TotalDays(fromDate, toDate) * site.Value.DailyFee).ToString().PadRight(15));
 				}
+
 				Console.WriteLine("Which site should be reserved(enter 0 to cancel)? ");
-				string siteToReserve = Console.ReadLine();
+				int siteToReserve = int.Parse(Console.ReadLine());
+				Console.WriteLine(" What name should the reservation be made under ?");
+				string reservationName = Console.ReadLine();
+
+				ReservationDAL reservationdDal = new ReservationDAL(DatabaseConnection);
+
+				int reservationId = reservationdDal.MakeAReservation(siteToReserve, fromDate, toDate, reservationName);
+				Console.WriteLine("The reservation has been made");
+				Console.WriteLine($"The confirmation ID is : {reservationId}");
+				Console.ReadLine();
 			}
 		}
 
+		/// <summary>
+		/// Returns total days of stay
+		/// </summary>
+		/// <param name="fromDate"></param>
+		/// <param name="toDate"></param>
+		/// <returns></returns>
 		private static int TotalDays(string fromDate, string toDate)
 		{
 			DateTime convertedFromDate = Convert.ToDateTime(fromDate);

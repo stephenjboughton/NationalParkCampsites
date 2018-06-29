@@ -43,17 +43,41 @@ namespace Capstone.DAL
 				{
 					conn.Open();
 
-					string sql = $"SELECT TOP 5 site.* , campground.daily_fee FROM site INNER JOIN reservation ON reservation.site_id = site.site_id INNER JOIN campground ON site.campground_id = campground.campground_id  WHERE site.campground_id = @campgroundID AND @fromDate NOT BETWEEN reservation.from_date AND reservation.to_date AND @toDate NOT BETWEEN reservation.from_date AND reservation.to_date;";
+					//string sql = $"SELECT TOP 5 site.* , campground.daily_fee FROM site INNER JOIN reservation ON reservation.site_id = site.site_id INNER JOIN campground ON site.campground_id = campground.campground_id  WHERE site.campground_id = @campgroundID AND @fromDate NOT BETWEEN reservation.from_date AND reservation.to_date AND @toDate NOT BETWEEN reservation.from_date AND reservation.to_date;";
+
+					//string sql = $"SELECT TOP 5 site.* , campground.daily_fee " +
+					//	$"FROM site " +
+					//	$"INNER JOIN reservation ON reservation.site_id = site.site_id " +
+					//	$"INNER JOIN campground ON site.campground_id = campground.campground_id  " +
+					//	$"WHERE site.campground_id = @campgroundID AND site.site_id NOT IN " +
+					//		$"(SELECT site_id FROM reservation WHERE reservation.from_date BETWEEN @fromDate AND @toDate)" +
+					//		$" AND site.site_id NOT IN" +
+					//		$"(SELECT site_id FROM reservation WHERE reservation.to_date BETWEEN @fromDate AND @toDate);";
+
+					//string sql = $"SELECT TOP 5 site.* , campground.daily_fee " +
+					//	$"FROM site " +
+					//	$"INNER JOIN reservation ON reservation.site_id = site.site_id " +
+					//	$"INNER JOIN campground ON site.campground_id = campground.campground_id  " +
+					//	$"WHERE site.campground_id = @campgroundID AND site.site_id NOT IN " +
+					//		$"(SELECT site_id FROM reservation WHERE reservation.from_date BETWEEN @fromDate AND @toDate)" +
+					//		$" AND site.site_id NOT IN" +
+					//		$"(SELECT site_id FROM reservation WHERE reservation.to_date BETWEEN @fromDate AND @toDate);";
+
+					//string sql = $"SELECT site.*, campground.daily_fee FROM site INNER JOIN campground ON site.campground_id = campground.campground_id WHERE site.campground_id = 2 AND site.site_id NOT IN(SELECT site.site_id FROM reservation INNER JOIN site ON site.site_id = reservation.site_id INNER JOIN campground ON site.campground_id = campground.campground_id WHERE campground.campground_id = 2 AND((reservation.from_date BETWEEN '2018/06/30' AND '2018/07/03') OR (reservation.to_date BETWEEN '2018/06/30' AND '2018/07/03')));";
+
+					string sql = $"SELECT TOP 5 site.*, campground.daily_fee FROM site INNER JOIN campground ON site.campground_id = campground.campground_id WHERE site.campground_id = @campgroundId AND site.site_id NOT IN (SELECT site_id FROM reservation WHERE(reservation.to_date BETWEEN @fromDate AND @toDate) OR(reservation.from_date BETWEEN @fromDate AND @toDate) OR " +
+						$"(reservation.from_date < @fromDate AND reservation.to_date > @toDate));";
+
+
+
 
 					SqlCommand cmd = new SqlCommand(sql, conn);
 
 					cmd.Parameters.AddWithValue("@campgroundId", campgroundId);
-					cmd.Parameters.AddWithValue("@fromDate", convertedFromDate);
-					cmd.Parameters.AddWithValue("@toDate", convertedToDate);
+					cmd.Parameters.AddWithValue("@fromDate", convertedFromDate.Date);
+					cmd.Parameters.AddWithValue("@toDate", convertedToDate.Date);
 
 					SqlDataReader reader = cmd.ExecuteReader();
-
-					int siteDictionaryKey = 1;
 
 					while (reader.Read())
 					{
@@ -67,7 +91,9 @@ namespace Capstone.DAL
 						site.Utilities = Convert.ToBoolean(reader["utilities"]);
 						site.DailyFee = Convert.ToDecimal(reader["daily_fee"]);
 
-						sites[siteDictionaryKey++] = site;
+						
+						sites[site.SiteNumber] = site;
+						
 					}
 				}
 			}
@@ -103,6 +129,7 @@ namespace Capstone.DAL
 
 					int siteDictionaryKey = 1;
 
+					//Add Sites to dictionary
 					while (reader.Read())
 					{
 						Site site = new Site();
