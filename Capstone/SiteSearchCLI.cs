@@ -34,8 +34,6 @@ namespace Capstone
 			// Calls method to show all of the campgrounds
 			ChooseACampground(out campgroundChoice, out fromDate, out toDate);
 
-		
-
 			//Calls DAL to build a dictionary of sites available for specified date range
 			SiteDAL siteDal = new SiteDAL(DatabaseConnection);
 			IDictionary<int, Site> AvailableSites = siteDal.GetAvailableSites(campgroundChoice, fromDate, toDate);
@@ -50,9 +48,19 @@ namespace Capstone
 				{
 					ChooseACampground(out campgroundChoice, out fromDate, out toDate);
 				}
+				//Quit or Return to main menu
+				if (selection.ToLower() == "n")
+				{
+					ParksCLI cli = new ParksCLI();
+					cli.RunCLI();
+				}
+				else
+				{
+					Console.Write("Please enter a valid selection");
+				}
 			}
 
-			//
+			//Shows campground selection
 			else
 			{
 				Console.WriteLine();
@@ -68,17 +76,29 @@ namespace Capstone
 					(TotalDays(fromDate, toDate) * site.Value.DailyFee).ToString().PadRight(15));
 				}
 
+				//To Reserve a campground
 				Console.WriteLine("Which site should be reserved(enter 0 to cancel)? ");
 				int siteToReserve = int.Parse(Console.ReadLine());
 				Console.WriteLine(" What name should the reservation be made under ?");
 				string reservationName = Console.ReadLine();
-
+				if(AvailableSites.ContainsKey(siteToReserve)) 
+				{
 				ReservationDAL reservationdDal = new ReservationDAL(DatabaseConnection);
 
 				int reservationId = reservationdDal.MakeAReservation(siteToReserve, fromDate, toDate, reservationName);
 				Console.WriteLine("The reservation has been made");
 				Console.WriteLine($"The confirmation ID is : {reservationId}");
 				Console.ReadLine();
+				}
+				if (siteToReserve == 0)
+				{
+					ParkInfoCLI parkInfo = new ParkInfoCLI();
+					//parkInfo.DisplayParkInfo();
+				}
+				else
+				{ 
+					Console.Write("Please enter a valid selection");
+				}
 			}
 		}
 
@@ -87,7 +107,7 @@ namespace Capstone
 		/// </summary>
 		/// <param name="fromDate"></param>
 		/// <param name="toDate"></param>
-		/// <returns></returns>
+		/// <returns>total days as int</returns>
 		private static int TotalDays(string fromDate, string toDate)
 		{
 			DateTime convertedFromDate = Convert.ToDateTime(fromDate);

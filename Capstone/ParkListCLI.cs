@@ -23,6 +23,8 @@ namespace Capstone.Models
 
 				//Calls method to show park list - from dictionary
 				BuildParkListForMenu();
+
+				//Input
 				string selection = Console.ReadLine();
 				int parkSelection;
 

@@ -21,21 +21,23 @@ namespace Capstone
 				//Display park name
 				Console.WriteLine(park.Name + " National Park");
 				//Dispaly park Location
+				Console.WriteLine();
 				Console.WriteLine("Location: " + park.Location);
 				//Display est date
-				Console.WriteLine("Established: " + park.EstablishDate);
+				Console.WriteLine("Established: " + park.EstablishDate.ToShortDateString());
 				//Display area
 				Console.WriteLine("Area: " + park.Area);
 				//Display annual visitors
 				Console.WriteLine("Annual Visitors: " + park.Visitors);
 				//Display description
+				Console.WriteLine();
 				Console.WriteLine(park.Description);
 
 				Console.WriteLine();
 				Console.WriteLine("Select a Command");
-				Console.WriteLine("1) View Campgrounds");
-				Console.WriteLine("2) Search for Reservation");
-				Console.WriteLine("3) Return to Previous Screen");
+				Console.WriteLine("  1) View Campgrounds");
+				Console.WriteLine("  2) Search for Reservation");
+				Console.WriteLine("  3) Return to Previous Screen");
 
 				string input = Console.ReadLine();
 
@@ -48,30 +50,33 @@ namespace Capstone
 				}
 				else if (input == "2")
 				{
-					Console.Write("What is the arrival date? ");
-					string fromDate = Console.ReadLine();
-					Console.Write("What is the departure date? ");
-					string toDate = Console.ReadLine();
+					////Call Park info class that contains park id
+					Console.WriteLine("Please enter a valid selection");
+					////Call Park info class that contains park id
+					//Console.Write("What is the arrival date? ");
+					//string fromDate = Console.ReadLine();
+					//Console.Write("What is the departure date? ");
+					//string toDate = Console.ReadLine();
 
-					SiteDAL dal = new SiteDAL(DatabaseConnection);
-					IDictionary<int, Site> AvailableSites = dal.GetSitesParkwide(park.Id, fromDate, toDate);
+					//SiteDAL dal = new SiteDAL(DatabaseConnection);
+					//IDictionary<int, Site> AvailableSites = dal.GetSitesParkwide(park.Id, fromDate, toDate);
 
-					Console.WriteLine();
-					Console.WriteLine("Results Matching Your Search Criteria");
-					Console.WriteLine("Campground".PadRight(20) + "Site No.".PadRight(10) + "Max Occup.".PadRight(15) + "Accessible?".PadRight(15) + "Max RV Length".PadRight(15) + "Utility".PadRight(15) + "Cost".PadRight(15));
-					foreach (KeyValuePair<int, Site> site in AvailableSites)
-					{
-						Console.WriteLine(
-						site.Value.CampgroundName.ToString().PadRight(20) +
-						site.Value.SiteNumber.ToString().PadRight(10) +
-						site.Value.MaxOccupancy.ToString().PadRight(15) +
-						site.Value.Accessible.ToString().PadRight(15) +
-						site.Value.MaxRv.ToString().PadRight(15) +
-						site.Value.Utilities.ToString().PadRight(15) +
-						(TotalDays(fromDate, toDate) * site.Value.DailyFee).ToString().PadRight(15));
-					}
-					Console.WriteLine("Which site should be reserved(enter 0 to cancel)? ");
-					string siteToReserve = Console.ReadLine();
+					//Console.WriteLine();
+					//Console.WriteLine("Results Matching Your Search Criteria");
+					//Console.WriteLine("Campground".PadRight(20) + "Site No.".PadRight(10) + "Max Occup.".PadRight(15) + "Accessible?".PadRight(15) + "Max RV Length".PadRight(15) + "Utility".PadRight(15) + "Cost".PadRight(15));
+					//foreach (KeyValuePair<int, Site> site in AvailableSites)
+					//{
+					//	Console.WriteLine(
+					//	site.Value.CampgroundName.ToString().PadRight(20) +
+					//	site.Value.SiteNumber.ToString().PadRight(10) +
+					//	site.Value.MaxOccupancy.ToString().PadRight(15) +
+					//	site.Value.Accessible.ToString().PadRight(15) +
+					//	site.Value.MaxRv.ToString().PadRight(15) +
+					//	site.Value.Utilities.ToString().PadRight(15) +
+					//	(TotalDays(fromDate, toDate) * site.Value.DailyFee).ToString().PadRight(15));
+					//}
+					//Console.WriteLine("Which site should be reserved(enter 0 to cancel)? ");
+					//string siteToReserve = Console.ReadLine();
 
 				}
 				else if (input == "3")
