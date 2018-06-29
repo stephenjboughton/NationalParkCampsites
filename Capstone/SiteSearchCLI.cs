@@ -52,11 +52,17 @@ namespace Capstone
 			//
 			else
 			{
+				Console.WriteLine();
 				Console.WriteLine("Results Matching Your Search Criteria");
+				Console.WriteLine("Site No.".PadRight(10) + "Max Occup.".PadRight(15) + "Accessible?".PadRight(15) + "Max RV Length".PadRight(15) + "Utility".PadRight(15) + "Cost".PadRight(15));
 				foreach (KeyValuePair<int, Site> site in AvailableSites)
 				{
-					Console.WriteLine($"{site.Value.SiteNumber}  {site.Value.MaxOccupancy}  {site.Value.Accessible}  {site.Value.MaxRv}  {site.Value.Utilities}" +
-						$"{TotalDays(fromDate, toDate)*site.Value.DailyFee}");
+					Console.WriteLine(site.Value.SiteNumber.ToString().PadRight(10) +
+					site.Value.MaxOccupancy.ToString().PadRight(15) +
+					site.Value.Accessible.ToString().PadRight(15) +
+					site.Value.MaxRv.ToString().PadRight(15) +
+					site.Value.Utilities.ToString().PadRight(15) +
+					(TotalDays(fromDate, toDate) * site.Value.DailyFee).ToString().PadRight(15));
 				}
 				Console.WriteLine("Which site should be reserved(enter 0 to cancel)? ");
 				string siteToReserve = Console.ReadLine();

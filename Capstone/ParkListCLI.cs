@@ -10,35 +10,32 @@ namespace Capstone.Models
 	class ParksCLI
 	{
 		//Database Connection
-		//const string Command_GetAllParks = "1";
-
 		const string DatabaseConnection = @"Data Source=.\SQLEXPRESS;Initial Catalog=Campground;Integrated Security=True";
-
 
 		public void RunCLI()
 		{
 			Console.Clear();
 
-			//Calls method to show header
-			ShowHeader();
-
-			//Calls method to show park list - from dictionary
-			BuildParkListForMenu();
-
 			while (true)
 			{
+				//Calls method to show header
+				ShowHeader();
+
+				//Calls method to show park list - from dictionary
+				BuildParkListForMenu();
 				string selection = Console.ReadLine();
 				int parkSelection;
-				SubParkInfoCLI subPark = new SubParkInfoCLI();
+
+				ParkInfoCLI parkInfo = new ParkInfoCLI();
 				ParkDAL dal = new ParkDAL(DatabaseConnection);
 				IDictionary<int, Park> parks = dal.GetAllParks();
 
 				// Try Parse park selection
 				bool parkKey = int.TryParse(selection, out parkSelection);
-				if(parkKey == false)
+				if (parkKey == false)
 				{
 					if (selection.ToLower() == "q")
-					{ 
+					{
 						return;
 					}
 					else
@@ -46,12 +43,12 @@ namespace Capstone.Models
 						Console.WriteLine("Please enter a valid selection.");
 					}
 				}
-				else 
+				else
 				{
 					if (parks.ContainsKey(parkSelection))
 					{
 						//Call sub menu for park info
-						subPark.DisplayParkInfo(parks[parkSelection]);
+						parkInfo.DisplayParkInfo(parks[parkSelection]);
 
 					}
 					else
@@ -64,17 +61,6 @@ namespace Capstone.Models
 		}
 
 
-
-
-
-
-		//Select Campground Menu
-		//View Campground
-		//Search for Reservations
-		//Return to Previous Screen
-
-
-		//Show Parks Method
 
 		/// <summary>
 		/// Show header for park selection menu

@@ -16,5 +16,6 @@ namespace Capstone.Models
 		public int MaxRv { get; set; }
 		public bool Utilities { get; set; }
 		public decimal DailyFee { get; set; }
+		public string CampgroundName { get; set; }
 	}
 }

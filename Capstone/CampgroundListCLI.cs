@@ -8,60 +8,25 @@ using Capstone.Models;
 
 namespace Capstone
 {
-	public class SubParkInfoCLI
+	public class CampgroundListCLI
 	{
-
 		const string DatabaseConnection = @"Data Source=.\SQLEXPRESS;Initial Catalog=Campground;Integrated Security=True";
 
-		public void DisplayParkInfo(Park park)
-		{
-			Console.Clear();
-			//Display park name
-			Console.WriteLine(park.Name + " National Park");
-			//Dispaly park Location
-			Console.WriteLine("Location: " + park.Location);
-			//Display est date
-			Console.WriteLine("Established: " + park.EstablishDate);
-			//Display area
-			Console.WriteLine("Area: " + park.Area);
-			//Display annual visitors
-			Console.WriteLine("Annual Visitors: " + park.Visitors);
-			//Display description
-			Console.WriteLine(park.Description);
-
-			Console.WriteLine("Select a Command");
-			Console.WriteLine("1) View Campgrounds");
-			Console.WriteLine("2) Search for Reservation");
-			Console.WriteLine("3) Return to Previous Screen");
-
-			string input = Console.ReadLine();
-
-			if (input == "1")
-			{
-				DisplayCampgrounds(park.Id);
-			}
-			else if (input == "2")
-			{
-			}
-			else if (input == "3")
-			{
-				ParksCLI cli = new ParksCLI();
-				cli.RunCLI();
-			}
-			else
-			{
-				Console.WriteLine("Please enter a valid selection");
-			}
-
-		}
-
-		private void DisplayCampgrounds(int parkId)
+		/// <summary>
+		/// method that calls campground DAL to return a list of campgrounds at selected Park
+		/// </summary>
+		/// <param name="parkId"></param>
+		public void DisplayCampgrounds(int parkId)
 		{
 			while (true)
 			{
+				//instantiate a campground DAL and use its method for getting
+				//a dictionary of all campgrounds at specified park
 				CampgroundDAL dal = new CampgroundDAL(DatabaseConnection);
 				Console.Clear();
 				IDictionary<int, Campground> campground = dal.GetAllCampgroundsPerPark(parkId);
+
+				//iterate through dictionary of campgrounds and display properties of each
 				foreach (KeyValuePair<int, Campground> camps in campground)
 				{
 					Console.WriteLine("#" + camps.Key + " " + camps.Value.Name + " " + camps.Value.OpenFrom + " " + camps.Value.OpenTo + " " + camps.Value.DailyFee.ToString("c"));
@@ -80,11 +45,8 @@ namespace Capstone
 					siteSearch.PromptUserForDateRange(parkId);
 				}
 
-				//DOES NOT BREAK OUT OF LOOP WITH ON COMMAND. REQUIRES USER TO ENTER TWO COMMANDS
 				else if (campgroundChoice == "2")
 				{
-					//SubParkInfoCLI subPark = new SubParkInfoCLI();
-					//subPark.DisplayParkInfo();
 					break;
 				}
 				else
