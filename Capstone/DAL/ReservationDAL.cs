@@ -76,15 +76,13 @@ namespace Capstone.DAL
 		/// <param name="toDate"></param>
 		/// <param name="name"></param>
 		/// <returns>reservation Id</returns>
-		public int MakeAReservation(int siteToReserve, string fromDate, string toDate, string reservationName)
+		public int MakeAReservation(int siteToReserve, DateTime fromDate, DateTime toDate, string reservationName)
 		{
 			//instantiate dicitonary
 			Dictionary<int, Reservation> reservations = new Dictionary<int, Reservation>();
 
 			//instantiate new variables
 			int reservationId;
-			DateTime convertedFromDate = Convert.ToDateTime(fromDate);
-			DateTime convertedToDate = Convert.ToDateTime(toDate);
 
 			//add new reservation to table 
 			try
@@ -100,8 +98,8 @@ namespace Capstone.DAL
 					//New variables
 					cmd.Parameters.AddWithValue("@siteid", siteToReserve);
 					cmd.Parameters.AddWithValue("@name", reservationName);
-					cmd.Parameters.AddWithValue("@fromDate", convertedFromDate);
-					cmd.Parameters.AddWithValue("@toDate", convertedToDate);
+					cmd.Parameters.AddWithValue("@fromDate", fromDate);
+					cmd.Parameters.AddWithValue("@toDate", toDate);
 					cmd.Parameters.AddWithValue("@createDate", DateTime.Now);
 
 					//
@@ -109,7 +107,7 @@ namespace Capstone.DAL
 					return reservationId;
 				}
 			}
-			catch (SqlException ex)
+			catch (SqlException)
 			{
 				throw;
 			}

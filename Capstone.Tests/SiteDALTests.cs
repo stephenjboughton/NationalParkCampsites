@@ -19,9 +19,9 @@ namespace Capstone.Tests
 		{
 			//Arrange
 			SiteDAL dal = new SiteDAL(ConnectionString);
-
+			
 			//Act
-			var sites = dal.GetAvailableSites(campgroundId, fromDate, toDate);
+			var sites = dal.GetAvailableSites(campgroundId, Convert.ToDateTime(fromDate), Convert.ToDateTime(toDate));
 
 			//Assert
 			Assert.AreEqual(expectedCount, sites.Count);

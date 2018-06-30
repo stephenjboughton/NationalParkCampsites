@@ -53,8 +53,8 @@ namespace Capstone.DAL
 						camp.Id = Convert.ToInt32(reader["campground_id"]);
 						camp.ParkId = Convert.ToInt32(reader["park_id"]);
 						camp.Name = Convert.ToString(reader["name"]);
-						camp.OpenFrom = Convert.ToInt32(reader["open_from_mm"]);
-						camp.OpenTo = Convert.ToInt32(reader["open_to_mm"]);
+						camp.OpenFrom = IntToMonth(Convert.ToInt32(reader["open_from_mm"]));
+						camp.OpenTo = IntToMonth(Convert.ToInt32(reader["open_to_mm"]));
 						camp.DailyFee = Convert.ToDecimal(reader["daily_fee"]);
 
 						campgrounds[campDictionaryKey++] = camp;
@@ -69,7 +69,14 @@ namespace Capstone.DAL
 			return campgrounds;
 		}
 
+		private string IntToMonth(int value)
+		{
+			string month;
+			string[] months = new string[12] { "January", "February", "March", "April", "May", "June", " July", "August", "September", "October", "November", "December" };
+			month = months[value - 1];
+			return month;
 
-
+		}
 	}
 }
+

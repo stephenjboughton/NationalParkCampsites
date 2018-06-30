@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Capstone.DAL;
 using Capstone.Models;
@@ -50,55 +51,79 @@ namespace Capstone
 				}
 				else if (input == "2")
 				{
-					////Call Park info class that contains park id
-					Console.WriteLine("Please enter a valid selection");
-					////Call Park info class that contains park id
-					//Console.Write("What is the arrival date? ");
-					//string fromDate = Console.ReadLine();
-					//Console.Write("What is the departure date? ");
-					//string toDate = Console.ReadLine();
+					Console.Write("What is the arrival date? ");
+					string inputFromDate = Console.ReadLine();
+					DateTime fromDate;
+					if (DateTime.TryParse(inputFromDate, out fromDate))
+					{
 
-					//SiteDAL dal = new SiteDAL(DatabaseConnection);
-					//IDictionary<int, Site> AvailableSites = dal.GetSitesParkwide(park.Id, fromDate, toDate);
+					}
+					else
+					{
+						Console.WriteLine("Please enter a valid selection.");
+						Thread.Sleep(2000);
+					}
+					Console.Write("What is the departure date? ");
+					string inputToDate = Console.ReadLine();
+					DateTime toDate;
+					if (DateTime.TryParse(inputToDate, out toDate))
+					{
 
-					//Console.WriteLine();
-					//Console.WriteLine("Results Matching Your Search Criteria");
-					//Console.WriteLine("Campground".PadRight(20) + "Site No.".PadRight(10) + "Max Occup.".PadRight(15) + "Accessible?".PadRight(15) + "Max RV Length".PadRight(15) + "Utility".PadRight(15) + "Cost".PadRight(15));
-					//foreach (KeyValuePair<int, Site> site in AvailableSites)
-					//{
-					//	Console.WriteLine(
-					//	site.Value.CampgroundName.ToString().PadRight(20) +
-					//	site.Value.SiteNumber.ToString().PadRight(10) +
-					//	site.Value.MaxOccupancy.ToString().PadRight(15) +
-					//	site.Value.Accessible.ToString().PadRight(15) +
-					//	site.Value.MaxRv.ToString().PadRight(15) +
-					//	site.Value.Utilities.ToString().PadRight(15) +
-					//	(TotalDays(fromDate, toDate) * site.Value.DailyFee).ToString().PadRight(15));
-					//}
-					//Console.WriteLine("Which site should be reserved(enter 0 to cancel)? ");
-					//string siteToReserve = Console.ReadLine();
+					}
+					else
+					{
+						Console.WriteLine("Please enter a valid selection.");
+						Thread.Sleep(2000);
+					}
+
+					//Call site DAL and use GetSitesParkwide to give the user a dictionary of all 
+					//campsites in the park to select from
+					SiteDAL dal = new SiteDAL(DatabaseConnection);
+					IDictionary<int, Site> AvailableSites = dal.GetSitesParkwide(park.Id, fromDate, toDate);
+
+					Console.WriteLine();
+					Console.WriteLine("Results Matching Your Search Criteria");
+					Console.WriteLine("Campground".PadRight(20) + "Site No.".PadRight(10) + "Max Occup.".PadRight(15) + "Accessible?".PadRight(15) + "Max RV Length".PadRight(15) + "Utility".PadRight(15) + "Cost".PadRight(15));
+					foreach (KeyValuePair<int, Site> site in AvailableSites)
+					{
+						Console.WriteLine(
+						site.Value.CampgroundName.ToString().PadRight(20) +
+						site.Value.SiteNumber.ToString().PadRight(10) +
+						site.Value.MaxOccupancy.ToString().PadRight(15) +
+						site.Value.Accessible.ToString().PadRight(15) +
+						site.Value.MaxRv.ToString().PadRight(15) +
+						site.Value.Utilities.ToString().PadRight(15) +
+						(TotalDays(fromDate, toDate) * site.Value.DailyFee).ToString().PadRight(15));
+					}
+					Console.Write("Which site should be reserved(enter 0 to cancel)? ");
+					int siteToReserve = int.Parse(Console.ReadLine());
+					Console.Write("What name should the reservation be made under? ");
+					string reservationName = Console.ReadLine();
+
+					ReservationDAL reservationdDal = new ReservationDAL(DatabaseConnection);
+
+					int reservationId = reservationdDal.MakeAReservation(siteToReserve, fromDate, toDate, reservationName);
+					Console.WriteLine("The reservation has been made");
+					Console.WriteLine($"The confirmation ID is : {reservationId}");
+					Console.ReadLine();
+					break;
 
 				}
 				else if (input == "3")
 				{
-					//ParksCLI cli = new ParksCLI();
-					//cli.RunCLI();
 					break;
 				}
 				else
 				{
-					Console.WriteLine("Please enter a valid selection");
+					Console.WriteLine("Please enter a valid selection.");
+					Thread.Sleep(2000);
 				}
-
 			}
-
 		}
 
-		private static int TotalDays(string fromDate, string toDate)
+		private static int TotalDays(DateTime fromDate, DateTime toDate)
 		{
-			DateTime convertedFromDate = Convert.ToDateTime(fromDate);
-			DateTime convertedToDate = Convert.ToDateTime(toDate);
-			int totalDays = (convertedToDate - convertedFromDate).Days;
+			int totalDays = (toDate - fromDate).Days;
 			return totalDays;
 		}
 	}

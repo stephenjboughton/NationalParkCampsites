@@ -27,9 +27,14 @@ namespace Capstone
 				IDictionary<int, Campground> campground = dal.GetAllCampgroundsPerPark(parkId);
 
 				//iterate through dictionary of campgrounds and display properties of each
+				Console.WriteLine(" ".PadRight(5) + "Name".PadRight(35) + "Open".PadRight(10) + "Close".PadRight(13) + "Daily Fee".PadRight(10));
 				foreach (KeyValuePair<int, Campground> camps in campground)
 				{
-					Console.WriteLine("#" + camps.Key + " " + camps.Value.Name + " " + camps.Value.OpenFrom + " " + camps.Value.OpenTo + " " + camps.Value.DailyFee.ToString("c"));
+					Console.WriteLine("#"+camps.Key.ToString().PadRight(4) + 
+										camps.Value.Name.ToString().PadRight(35) + 
+										camps.Value.OpenFrom.ToString().PadRight(10) + 
+										camps.Value.OpenTo.ToString().PadRight(13) + 
+										camps.Value.DailyFee.ToString("c").ToString().PadRight(10));
 				}
 				Console.WriteLine();
 				Console.WriteLine("Select A Command");

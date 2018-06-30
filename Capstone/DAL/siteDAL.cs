@@ -31,11 +31,9 @@ namespace Capstone.DAL
 		/// the site during the users' requested stay.
 		/// </summary>
 		/// <returns></returns>
-		public IDictionary<int, Site> GetAvailableSites(int campgroundId, string fromDate, string toDate)
+		public IDictionary<int, Site> GetAvailableSites(int campgroundId, DateTime fromDate, DateTime toDate)
 		{
 			Dictionary<int, Site> sites = new Dictionary<int, Site>();
-			DateTime convertedFromDate = Convert.ToDateTime(fromDate);
-			DateTime convertedToDate = Convert.ToDateTime(toDate);
 
 			try
 			{
@@ -77,8 +75,8 @@ namespace Capstone.DAL
 
 					//
 					cmd.Parameters.AddWithValue("@campgroundId", campgroundId);
-					cmd.Parameters.AddWithValue("@fromDate", convertedFromDate.Date);
-					cmd.Parameters.AddWithValue("@toDate", convertedToDate.Date);
+					cmd.Parameters.AddWithValue("@fromDate", fromDate.Date);
+					cmd.Parameters.AddWithValue("@toDate", toDate.Date);
 
 					SqlDataReader reader = cmd.ExecuteReader();
 
@@ -115,11 +113,9 @@ namespace Capstone.DAL
 		/// <param name="fromDate"></param>
 		/// <param name="toDate"></param>
 		/// <returns></returns>
-		public IDictionary<int, Site> GetSitesParkwide(int parkId, string fromDate, string toDate)
+		public IDictionary<int, Site> GetSitesParkwide(int parkId, DateTime fromDate, DateTime toDate)
 		{
 			Dictionary<int, Site> sites = new Dictionary<int, Site>();
-			DateTime convertedFromDate = Convert.ToDateTime(fromDate);
-			DateTime convertedToDate = Convert.ToDateTime(toDate);
 
 			try
 			{
@@ -127,14 +123,14 @@ namespace Capstone.DAL
 				{
 					conn.Open();
 
-					string sql = $"SELECT TOP 5 site.*, campground.daily_fee FROM site INNER JOIN campground ON site.campground_id = campground.campground_id WHERE site.campground_id = @campgroundId AND site.site_id NOT IN (SELECT site_id FROM reservation WHERE(reservation.to_date BETWEEN @fromDate AND @toDate) OR(reservation.from_date BETWEEN @fromDate AND @toDate) OR " +
+					string sql = $"SELECT TOP 5 site.*, campground.daily_fee, campground.name FROM site INNER JOIN campground ON site.campground_id = campground.campground_id WHERE campground.park_id = @parkId AND site.site_id NOT IN (SELECT site_id FROM reservation WHERE(reservation.to_date BETWEEN @fromDate AND @toDate) OR(reservation.from_date BETWEEN @fromDate AND @toDate) OR " +
 						$"(reservation.from_date < @fromDate AND reservation.to_date > @toDate));";
 
 					SqlCommand cmd = new SqlCommand(sql, conn);
 
 					cmd.Parameters.AddWithValue("@parkId", parkId);
-					cmd.Parameters.AddWithValue("@fromDate", convertedFromDate);
-					cmd.Parameters.AddWithValue("@toDate", convertedToDate);
+					cmd.Parameters.AddWithValue("@fromDate", fromDate);
+					cmd.Parameters.AddWithValue("@toDate", toDate);
 
 					SqlDataReader reader = cmd.ExecuteReader();
 

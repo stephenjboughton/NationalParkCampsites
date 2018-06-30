@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Capstone.DAL;
 
@@ -18,6 +19,7 @@ namespace Capstone.Models
 
 			while (true)
 			{
+				Console.Clear();
 				//Calls method to show header
 				ShowHeader();
 
@@ -38,7 +40,7 @@ namespace Capstone.Models
 				{
 					if (selection.ToLower() == "q")
 					{
-						break;
+						return;
 					}
 					else
 					{
@@ -56,6 +58,7 @@ namespace Capstone.Models
 					else
 					{
 						Console.WriteLine("Please enter a valid selection.");
+						Thread.Sleep(2000);
 					}
 				}
 
