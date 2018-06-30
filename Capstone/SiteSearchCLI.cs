@@ -32,7 +32,7 @@ namespace Capstone
 										camps.Value.Name.ToString().PadRight(35) +
 										camps.Value.OpenFrom.ToString().PadRight(10) +
 										camps.Value.OpenTo.ToString().PadRight(13) +
-										camps.Value.DailyFee.ToString("c").ToString().PadRight(10));
+										camps.Value.DailyFee.ToString("c").ToString().PadRight		(10));
 				}
 				Console.Write("Which campground (enter 0 to cancel)? ");
 				string campgroundChoice = Console.ReadLine();
@@ -66,9 +66,11 @@ namespace Capstone
 						{
 							ChooseACampground(out fromDate, out toDate);
 						}
+
 						//Quit or Return to main menu
 						if (selection.ToLower() == "n")
 						{
+							//return to campsites not parks
 							ParksCLI cli = new ParksCLI();
 							cli.RunCLI();
 						}
@@ -89,10 +91,12 @@ namespace Capstone
 							Console.WriteLine(site.Value.SiteNumber.ToString().PadRight(10) +
 							site.Value.MaxOccupancy.ToString().PadRight(15) +
 							(site.Value.Accessible ? "Yes" : "No").PadRight(15) +
-							site.Value.MaxRv.ToString().PadRight(15) +
+							//site.Value.MaxRv.ToString().PadRight(15) +
+							((site.Value.MaxRv == 0) ? "N/A" : site.Value.MaxRv.ToString()).PadRight(15) +
 							(site.Value.Utilities ? "Yes" : "No").PadRight(15) +
 							(TotalDays(fromDate, toDate) * site.Value.DailyFee).ToString().PadRight(15));
 						}
+						
 
 						//To Reserve a campground
 						Console.WriteLine("Which site should be reserved(enter 0 to cancel)? ");
@@ -140,43 +144,47 @@ namespace Capstone
 			return totalDays;
 		}
 
-
 		/// <summary>
-		/// Takes in campground number and date range 
+		/// Takes in a date range 
 		/// </summary>
-		/// <param name="campgroundChoice"></param>
+		/// <param name="campgroundChoice">?????</param>
 		/// <param name="fromDate"></param>
 		/// <param name="toDate"></param>
-		private static void ChooseACampground(out DateTime fromDate, out DateTime toDate)
+		public void ChooseACampground(out DateTime fromDate, out DateTime toDate)
 		{
+
 			Console.Write("What is the arrival date? ");
 			string inputFromDate = Console.ReadLine();
-			try
-			{
-				if (DateTime.TryParse(inputFromDate, out fromDate))
-				{
-					Console.Write("What is the departure date? ");
-					string inputToDate = Console.ReadLine();
-					if (DateTime.TryParse(inputToDate, out toDate))
-					{
+			Console.Write("What is the departure date? ");
+			string inputToDate = Console.ReadLine();
 
-					}
-					else
-					{
-						Console.WriteLine("Please enter a valid selection.");
-						Thread.Sleep(2000);
-					}
+			if (DateTime.TryParse(inputFromDate, out fromDate))
+			{
+			}
+			if  (DateTime.TryParse(inputToDate, out toDate))
+			{
+			}
+			else
+			{
+				Console.WriteLine("Selection Not Valid");
+				Console.WriteLine("Would You like to Continue? Y of N ");
+				string selection =Console.ReadLine();
+				selection.ToLower();
+				if( selection == "y")
+				{ 
+				ChooseACampground(out fromDate, out toDate);
 				}
 				else
 				{
-					Console.WriteLine("Please enter a valid selection.");
-					Thread.Sleep(2000);
+					//Should this send users back to the parks menu or campsite menu
+					ParksCLI cli = new ParksCLI();
+					cli.RunCLI();
+					//CampgroundListCLI listCLI = new CampgroundListCLI();
+					//listCLI.DisplayCampgrounds(1);
 				}
+
 			}
-			catch (Exception)
-			{
-				Console.WriteLine("Invalid date format");
-			}
+
 		}
 	}
 }

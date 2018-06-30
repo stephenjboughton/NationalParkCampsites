@@ -45,6 +45,7 @@ namespace Capstone.Models
 					else
 					{
 						Console.WriteLine("Please enter a valid selection.");
+						Thread.Sleep(2000);
 					}
 				}
 				else

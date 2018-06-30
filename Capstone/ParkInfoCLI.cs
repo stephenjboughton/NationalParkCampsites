@@ -45,36 +45,41 @@ namespace Capstone
 				if (input == "1")
 				{
 					//instantiate a campground list CLI and call campground display method
-					//CampgroundListCLI campgroundList = new CampgroundListCLI();
 					CampgroundListCLI campgroundList = new CampgroundListCLI();
 					campgroundList.DisplayCampgrounds(park.Id);
 				}
 				else if (input == "2")
 				{
-					Console.Write("What is the arrival date? ");
-					string inputFromDate = Console.ReadLine();
+					//Console.Write("What is the arrival date? ");
+					//string inputFromDate = Console.ReadLine();
+					//DateTime fromDate;
+					//if (DateTime.TryParse(inputFromDate, out fromDate))
+					//{
+
+					//}
+					//else
+					//{
+					//	Console.WriteLine("Please enter a valid selection.");
+					//	Thread.Sleep(2000);
+					//}
+					//Console.Write("What is the departure date? ");
+					//string inputToDate = Console.ReadLine();
+					//DateTime toDate;
+					//if (DateTime.TryParse(inputToDate, out toDate))
+					//{
+
+					//}
+					//else
+					//{
+					//	Console.WriteLine("Please enter a valid selection.");
+					//	Thread.Sleep(2000);
+					//}
+
 					DateTime fromDate;
-					if (DateTime.TryParse(inputFromDate, out fromDate))
-					{
-
-					}
-					else
-					{
-						Console.WriteLine("Please enter a valid selection.");
-						Thread.Sleep(2000);
-					}
-					Console.Write("What is the departure date? ");
-					string inputToDate = Console.ReadLine();
 					DateTime toDate;
-					if (DateTime.TryParse(inputToDate, out toDate))
-					{
-
-					}
-					else
-					{
-						Console.WriteLine("Please enter a valid selection.");
-						Thread.Sleep(2000);
-					}
+				
+					SiteSearchCLI siteSearch = new SiteSearchCLI();
+					siteSearch.ChooseACampground(out fromDate, out toDate);
 
 					//Call site DAL and use GetSitesParkwide to give the user a dictionary of all 
 					//campsites in the park to select from
