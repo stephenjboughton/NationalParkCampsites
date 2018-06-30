@@ -38,7 +38,7 @@ namespace Capstone.Models
 				{
 					if (selection.ToLower() == "q")
 					{
-						return;
+						break;
 					}
 					else
 					{

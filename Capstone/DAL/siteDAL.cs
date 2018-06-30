@@ -109,7 +109,7 @@ namespace Capstone.DAL
 		}
 
 		/// <summary>
-		/// Builds a dictionary to 
+		/// Builds a dictionary to show all available camp sites for all campgrounds throughout a park.
 		/// </summary>
 		/// <param name="parkId"></param>
 		/// <param name="fromDate"></param>

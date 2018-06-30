@@ -81,8 +81,9 @@ namespace Capstone
 				}
 				else if (input == "3")
 				{
-					ParksCLI cli = new ParksCLI();
-					cli.RunCLI();
+					//ParksCLI cli = new ParksCLI();
+					//cli.RunCLI();
+					break;
 				}
 				else
 				{
