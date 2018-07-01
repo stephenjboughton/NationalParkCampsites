@@ -63,7 +63,6 @@ namespace Capstone.DAL
 			catch (SqlException ex)
 			{
 				Console.WriteLine(ex.Message);
-
 			}
 			return reservations;
 		}

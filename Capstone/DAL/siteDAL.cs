@@ -41,42 +41,23 @@ namespace Capstone.DAL
 				{
 					conn.Open();
 
-					////THESE DID NOT WORK
+					////SQL Query to return "top 5" avaiable sites per campground
+					//string sql = $"SELECT TOP 5 site.*, campground.daily_fee FROM site INNER JOIN campground ON site.campground_id = campground.campground_id WHERE site.campground_id = @campgroundId AND site.site_id NOT IN (SELECT site_id FROM reservation WHERE(reservation.to_date BETWEEN @fromDate AND @toDate) OR(reservation.from_date BETWEEN @fromDate AND @toDate) OR " +
+					//	$"(reservation.from_date < @fromDate AND reservation.to_date > @toDate));";
 
-					//string sql = $"SELECT TOP 5 site.* , campground.daily_fee FROM site INNER JOIN reservation ON reservation.site_id = site.site_id INNER JOIN campground ON site.campground_id = campground.campground_id  WHERE site.campground_id = @campgroundID AND @fromDate NOT BETWEEN reservation.from_date AND reservation.to_date AND @toDate NOT BETWEEN reservation.from_date AND reservation.to_date;";
-
-					//string sql = $"SELECT TOP 5 site.* , campground.daily_fee " +
-					//	$"FROM site " +
-					//	$"INNER JOIN reservation ON reservation.site_id = site.site_id " +
-					//	$"INNER JOIN campground ON site.campground_id = campground.campground_id  " +
-					//	$"WHERE site.campground_id = @campgroundID AND site.site_id NOT IN " +
-					//		$"(SELECT site_id FROM reservation WHERE reservation.from_date BETWEEN @fromDate AND @toDate)" +
-					//		$" AND site.site_id NOT IN" +
-					//		$"(SELECT site_id FROM reservation WHERE reservation.to_date BETWEEN @fromDate AND @toDate);";
-
-					//string sql = $"SELECT TOP 5 site.* , campground.daily_fee " +
-					//	$"FROM site " +
-					//	$"INNER JOIN reservation ON reservation.site_id = site.site_id " +
-					//	$"INNER JOIN campground ON site.campground_id = campground.campground_id  " +
-					//	$"WHERE site.campground_id = @campgroundID AND site.site_id NOT IN " +
-					//		$"(SELECT site_id FROM reservation WHERE reservation.from_date BETWEEN @fromDate AND @toDate)" +
-					//		$" AND site.site_id NOT IN" +
-					//		$"(SELECT site_id FROM reservation WHERE reservation.to_date BETWEEN @fromDate AND @toDate);";
-
-					//string sql = $"SELECT site.*, campground.daily_fee FROM site INNER JOIN campground ON site.campground_id = campground.campground_id WHERE site.campground_id = 2 AND site.site_id NOT IN(SELECT site.site_id FROM reservation INNER JOIN site ON site.site_id = reservation.site_id INNER JOIN campground ON site.campground_id = campground.campground_id WHERE campground.campground_id = 2 AND((reservation.from_date BETWEEN '2018/06/30' AND '2018/07/03') OR (reservation.to_date BETWEEN '2018/06/30' AND '2018/07/03')));";
-
-					//////////////////////
-
-					//SQL Query to return "top 5" avaiable sites per campground
-					string sql = $"SELECT TOP 5 site.*, campground.daily_fee FROM site INNER JOIN campground ON site.campground_id = campground.campground_id WHERE site.campground_id = @campgroundId AND site.site_id NOT IN (SELECT site_id FROM reservation WHERE(reservation.to_date BETWEEN @fromDate AND @toDate) OR(reservation.from_date BETWEEN @fromDate AND @toDate) OR " +
+					////SQL Query to return "top 5" avaiable sites per campground between open from and open to months 
+					string sql = $"SELECT TOP 5 site.*, campground.daily_fee FROM site INNER JOIN campground ON site.campground_id = campground.campground_id " +
+						$"WHERE site.campground_id = @campgroundId AND (@fromDateMonth BETWEEN campground.open_from_mm AND campground.open_to_mm) AND (@toDateMonth BETWEEN campground.open_from_mm AND campground.open_to_mm)" +
+						$"AND site.site_id NOT IN (SELECT site_id FROM reservation WHERE(reservation.to_date BETWEEN @fromDate AND @toDate) OR(reservation.from_date BETWEEN @fromDate AND @toDate) OR " +
 						$"(reservation.from_date < @fromDate AND reservation.to_date > @toDate));";
 
 					SqlCommand cmd = new SqlCommand(sql, conn);
 
-					//
 					cmd.Parameters.AddWithValue("@campgroundId", campgroundId);
 					cmd.Parameters.AddWithValue("@fromDate", fromDate.Date);
 					cmd.Parameters.AddWithValue("@toDate", toDate.Date);
+					cmd.Parameters.AddWithValue("@fromDateMonth", fromDate.Month);
+					cmd.Parameters.AddWithValue("@toDateMonth", toDate.Month);
 
 					SqlDataReader reader = cmd.ExecuteReader();
 
@@ -134,8 +115,6 @@ namespace Capstone.DAL
 
 					SqlDataReader reader = cmd.ExecuteReader();
 
-					int siteDictionaryKey = 1;
-
 					//Add Sites to dictionary
 					while (reader.Read())
 					{
@@ -151,14 +130,13 @@ namespace Capstone.DAL
 						site.CampgroundName = Convert.ToString(reader["name"]);
 
 						//Return dictionary of all campgrounds within a park
-						sites[siteDictionaryKey++] = site;
+						sites[site.Id] = site;
 					}
 				}
 			}
 			catch (SqlException ex)
 			{
 				Console.WriteLine(ex.Message);
-
 			}
 			return sites;
 		}

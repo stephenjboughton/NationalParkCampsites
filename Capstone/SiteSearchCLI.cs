@@ -12,11 +12,12 @@ namespace Capstone
 		const string DatabaseConnection = @"Data Source=.\SQLEXPRESS;Initial Catalog=Campground;Integrated Security=True";
 
 		/// <summary>
-		/// 
+		/// Builds List of sites from input 
 		/// </summary>
 		/// <param name="parkId"></param>
-		public void PromptUserForDateRange(int parkId)
+		public bool PromptUserForDateRange(int parkId)
 		{
+			bool reservationMade = false;
 			while (true)
 			{
 				//connects campgrounds database
@@ -32,7 +33,7 @@ namespace Capstone
 										camps.Value.Name.ToString().PadRight(35) +
 										camps.Value.OpenFrom.ToString().PadRight(10) +
 										camps.Value.OpenTo.ToString().PadRight(13) +
-										camps.Value.DailyFee.ToString("c").ToString().PadRight		(10));
+										camps.Value.DailyFee.ToString("c").ToString().PadRight(10));
 				}
 				Console.Write("Which campground (enter 0 to cancel)? ");
 				string campgroundChoice = Console.ReadLine();
@@ -54,75 +55,79 @@ namespace Capstone
 
 					//Calls DAL to build a dictionary of sites available for specified date range
 					SiteDAL siteDal = new SiteDAL(DatabaseConnection);
-					IDictionary<int, Site> AvailableSites = siteDal.GetAvailableSites(campSelection, fromDate, toDate);
-
-					//if there are no available sites ask them for an alternate date range
-					if (AvailableSites.Count == 0)
+					try
 					{
-						Console.WriteLine("There are no available sites.");
-						Console.Write("Would you like to select another date range? Y or N");
-						string selection = Console.ReadLine();
-						if (selection.ToLower() == "y")
+					IDictionary<int, Site> AvailableSites = siteDal.GetAvailableSites(campSelection, fromDate, toDate);
+						//if there are no available sites ask them for an alternate date range
+						if (AvailableSites.Count == 0)
 						{
-							ChooseACampground(out fromDate, out toDate);
+							Console.WriteLine("There are no available sites.");
+							Console.Write("Would you like to select another date range? Y or N");
+							string selection = Console.ReadLine();
+							if (selection.ToLower() == "y")
+							{
+								ChooseACampground(out fromDate, out toDate);
+							}
+
+							//Quit or Return to main menu
+							if (selection.ToLower() == "n")
+							{
+								break;
+								//return to campsites not parks
+								//ParksCLI cli = new ParksCLI();
+								//cli.RunCLI();
+							}
+							else
+							{
+								Console.Write("Please enter a valid selection");
+							}
 						}
 
-						//Quit or Return to main menu
-						if (selection.ToLower() == "n")
-						{
-							//return to campsites not parks
-							ParksCLI cli = new ParksCLI();
-							cli.RunCLI();
-						}
+						//Shows campground selection
 						else
 						{
-							Console.Write("Please enter a valid selection");
+							Console.WriteLine();
+							Console.WriteLine("Results Matching Your Search Criteria");
+							Console.WriteLine("Site No.".PadRight(10) + "Max Occup.".PadRight(15) + "Accessible?".PadRight(15) + "Max RV Length".PadRight(15) + "Utility".PadRight(15) + "Cost".PadRight(15));
+							foreach (KeyValuePair<int, Site> site in AvailableSites)
+							{
+								Console.WriteLine(site.Value.SiteNumber.ToString().PadRight(10) +
+								site.Value.MaxOccupancy.ToString().PadRight(15) +
+								(site.Value.Accessible ? "Yes" : "No").PadRight(15) +
+								((site.Value.MaxRv == 0) ? "N/A" : site.Value.MaxRv.ToString()).PadRight(15) +
+								(site.Value.Utilities ? "Yes" : "No").PadRight(15) +
+								(TotalDays(fromDate, toDate) * site.Value.DailyFee).ToString().PadRight(15));
+							}
+
+							//To Reserve a campground
+							Console.WriteLine("Which site should be reserved(enter 0 to cancel)? ");
+							int siteToReserve = int.Parse(Console.ReadLine());
+							if (siteToReserve == 0)
+							{
+								break;
+							}
+							if (AvailableSites.ContainsKey(siteToReserve))
+							{
+								Console.WriteLine("What name should the reservation be made under ?");
+								string reservationName = Console.ReadLine();
+								ReservationDAL reservationdDal = new ReservationDAL(DatabaseConnection);
+								int reservationId = reservationdDal.MakeAReservation(siteToReserve, fromDate, toDate, reservationName);
+								Console.WriteLine("The reservation has been made");
+								Console.WriteLine($"The confirmation ID is : {reservationId}");
+								Console.WriteLine($"Press Enter to Return to Park List");
+								Console.ReadLine();
+								return reservationMade = true;
+							}
+							else
+							{
+								Console.Write("Please enter a valid selection");
+							}
 						}
 					}
-
-					//Shows campground selection
-					else
+					catch (Exception ex)
 					{
-						Console.WriteLine();
-						Console.WriteLine("Results Matching Your Search Criteria");
-						Console.WriteLine("Site No.".PadRight(10) + "Max Occup.".PadRight(15) + "Accessible?".PadRight(15) + "Max RV Length".PadRight(15) + "Utility".PadRight(15) + "Cost".PadRight(15));
-						foreach (KeyValuePair<int, Site> site in AvailableSites)
-						{
-							Console.WriteLine(site.Value.SiteNumber.ToString().PadRight(10) +
-							site.Value.MaxOccupancy.ToString().PadRight(15) +
-							(site.Value.Accessible ? "Yes" : "No").PadRight(15) +
-							//site.Value.MaxRv.ToString().PadRight(15) +
-							((site.Value.MaxRv == 0) ? "N/A" : site.Value.MaxRv.ToString()).PadRight(15) +
-							(site.Value.Utilities ? "Yes" : "No").PadRight(15) +
-							(TotalDays(fromDate, toDate) * site.Value.DailyFee).ToString().PadRight(15));
-						}
-						
-
-						//To Reserve a campground
-						Console.WriteLine("Which site should be reserved(enter 0 to cancel)? ");
-						int siteToReserve = int.Parse(Console.ReadLine());
-						if (siteToReserve == 0)
-						{
-							//ParkInfoCLI parkInfo = new ParkInfoCLI();
-							//parkInfo.DisplayParkInfo();
-							break;
-						}
-						else
-						{
-							Console.Write("Please enter a valid selection");
-						}
-						Console.WriteLine("What name should the reservation be made under ?");
-						string reservationName = Console.ReadLine();
-						if (AvailableSites.ContainsKey(siteToReserve))
-						{
-							ReservationDAL reservationdDal = new ReservationDAL(DatabaseConnection);
-
-							int reservationId = reservationdDal.MakeAReservation(siteToReserve, fromDate, toDate, reservationName);
-							Console.WriteLine("The reservation has been made");
-							Console.WriteLine($"The confirmation ID is : {reservationId}");
-							Console.ReadLine();
-							break;
-						}
+						Console.WriteLine("The input is not valid");
+						break;
 					}
 				}
 				else if (campSelection == 0)
@@ -130,8 +135,9 @@ namespace Capstone
 					break;
 				}
 			}
+			return reservationMade;
 		}
-
+	
 		/// <summary>
 		/// Returns total days of stay
 		/// </summary>
@@ -152,22 +158,25 @@ namespace Capstone
 		/// <param name="toDate"></param>
 		public void ChooseACampground(out DateTime fromDate, out DateTime toDate)
 		{
-
 			Console.Write("What is the arrival date? ");
 			string inputFromDate = Console.ReadLine();
 			Console.Write("What is the departure date? ");
 			string inputToDate = Console.ReadLine();
 
-			if (DateTime.TryParse(inputFromDate, out fromDate))
+			
+			if (DateTime.TryParse(inputFromDate, out fromDate) && fromDate.Date > DateTime.Now)
 			{
+				
+
 			}
-			if  (DateTime.TryParse(inputToDate, out toDate))
+			if  (DateTime.TryParse(inputToDate, out toDate) && toDate.Date > fromDate.Date)
 			{
+				
 			}
 			else
 			{
-				Console.WriteLine("Selection Not Valid");
-				Console.WriteLine("Would You like to Continue? Y of N ");
+				Console.WriteLine("Date Range Not Valid");
+				Console.WriteLine("Would You like to Continue? Y or N");
 				string selection =Console.ReadLine();
 				selection.ToLower();
 				if( selection == "y")
@@ -176,15 +185,9 @@ namespace Capstone
 				}
 				else
 				{
-					//Should this send users back to the parks menu or campsite menu
-					ParksCLI cli = new ParksCLI();
-					cli.RunCLI();
-					//CampgroundListCLI listCLI = new CampgroundListCLI();
-					//listCLI.DisplayCampgrounds(1);
+					return;
 				}
-
 			}
-
 		}
 	}
 }

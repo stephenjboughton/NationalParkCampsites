@@ -57,6 +57,7 @@
     <Compile Include="ParkDALTests.cs" />
     <Compile Include="CampgroundDALTests.cs" />
     <Compile Include="SiteDALTests.cs" />
+    <Compile Include="ReservationDALTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -16,8 +16,9 @@ namespace Capstone
 		/// method that calls campground DAL to return a list of campgrounds at selected Park
 		/// </summary>
 		/// <param name="parkId"></param>
-		public void DisplayCampgrounds(int parkId)
+		public bool DisplayCampgrounds(int parkId)
 		{
+			bool reservationMade = false;
 			while (true)
 			{
 				//instantiate a campground DAL and use its method for getting
@@ -47,7 +48,8 @@ namespace Capstone
 				if (campgroundChoice == "1")
 				{
 					SiteSearchCLI siteSearch = new SiteSearchCLI();
-					siteSearch.PromptUserForDateRange(parkId);
+					reservationMade = siteSearch.PromptUserForDateRange(parkId);
+					break;
 				}
 
 				else if (campgroundChoice == "2")
@@ -59,6 +61,7 @@ namespace Capstone
 					Console.WriteLine("Please enter a valid selection");
 				}
 			}
+			return reservationMade;
 		}
 	}
 }
