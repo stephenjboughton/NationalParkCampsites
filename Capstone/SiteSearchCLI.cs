@@ -47,19 +47,16 @@ namespace Capstone
 				}
 				else if (campground.ContainsKey(campSelection))
 				{
-
 					//Holds input variables
 					DateTime fromDate, toDate;
 					// Calls method to choose dates
 					ChooseACampground(out fromDate, out toDate);
-					//ArrivalDate(out fromDate);
-					//DepartureDate(fromDate, out toDate);
 
 					//Calls DAL to build a dictionary of sites available for specified date range
 					SiteDAL siteDal = new SiteDAL(DatabaseConnection);
 					try
 					{
-					IDictionary<int, Site> AvailableSites = siteDal.GetAvailableSites(campSelection, fromDate, toDate);
+						IDictionary<int, Site> AvailableSites = siteDal.GetAvailableSites(campSelection, fromDate, toDate);
 						//if there are no available sites ask them for an alternate date range
 						if (AvailableSites.Count == 0)
 						{
@@ -69,17 +66,12 @@ namespace Capstone
 							if (selection.ToLower() == "y")
 							{
 								ChooseACampground(out fromDate, out toDate);
-								//ArrivalDate(out fromDate);
-								//DepartureDate(fromDate, out toDate);
 							}
 
 							//Quit or Return to main menu
 							if (selection.ToLower() == "n")
 							{
 								break;
-								//return to campsites not parks
-								//ParksCLI cli = new ParksCLI();
-								//cli.RunCLI();
 							}
 							else
 							{
@@ -141,7 +133,7 @@ namespace Capstone
 			}
 			return reservationMade;
 		}
-	
+
 		/// <summary>
 		/// Returns total days of stay
 		/// </summary>
@@ -162,88 +154,24 @@ namespace Capstone
 		/// <param name="toDate"></param>
 		public void ChooseACampground(out DateTime fromDate, out DateTime toDate)
 		{
-			Console.Write("What is the arrival date? ");
-			string inputFromDate = Console.ReadLine();
-			Console.Write("What is the departure date? ");
-			string inputToDate = Console.ReadLine();
-
-
-			if (DateTime.TryParse(inputFromDate, out fromDate) && fromDate.Date > DateTime.Now)
+			fromDate = DateTime.MinValue;
+			toDate = DateTime.MinValue;
+			bool isValid = false;
+			while (!isValid)
 			{
+				Console.Write("What is the arrival date? ");
+				string inputFromDate = Console.ReadLine();
+				Console.Write("What is the departure date? ");
+				string inputToDate = Console.ReadLine();
 
-
-			}
-			if (DateTime.TryParse(inputToDate, out toDate) && toDate.Date > fromDate.Date)
-			{
-
-			}
-			else
-			{
-				Console.WriteLine("Date Range Not Valid");
-				Console.WriteLine("Would You like to Continue? Y or N");
-				string selection = Console.ReadLine();
-				selection.ToLower();
-				if (selection == "y")
+				if ((DateTime.TryParse(inputFromDate, out fromDate) && fromDate.Date > DateTime.Now)
+					&& (DateTime.TryParse(inputToDate, out toDate) && toDate.Date > fromDate.Date))
 				{
-					ChooseACampground(out fromDate, out toDate);
+					isValid = true;
 				}
-				else
-				{
-					return;
-				}
+				Console.WriteLine();
+				Console.WriteLine("Date range not valid, please select different dates.");
 			}
 		}
-
-		//public void ArrivalDate(out DateTime fromDate)
-		//{
-		//	Console.Write("What is the arrival date? ");
-		//	string inputFromDate = Console.ReadLine();
-
-		//	if (DateTime.TryParse(inputFromDate, out fromDate) && fromDate.Date > DateTime.Now)
-		//	{
-		//	}
-		//	else
-		//	{
-		//		Console.WriteLine("Date Range Not Valid");
-		//		Console.WriteLine("Would You like to Continue? Y or N");
-		//		string selection = Console.ReadLine();
-		//		selection.ToLower();
-		//		if (selection == "y")
-		//		{
-		//			ArrivalDate(out fromDate);
-		//		}
-		//		else
-		//		{
-		//			return;
-		//		}
-		//	}
-		//}
-
-
-		//public void DepartureDate(DateTime fromDate, out DateTime toDate)
-		//{
-		//	Console.Write("What is the departure date? ");
-		//	string inputToDate = Console.ReadLine();
-
-		//	if (DateTime.TryParse(inputToDate, out toDate) && toDate.Date > fromDate.Date)
-		//	{
-
-		//	}
-		//	else
-		//	{
-		//		Console.WriteLine("Date Range Not Valid");
-		//		Console.WriteLine("Would You like to Continue? Y or N");
-		//		string selection = Console.ReadLine();
-		//		selection.ToLower();
-		//		if (selection == "y")
-		//		{
-		//			DepartureDate(fromDate, out toDate);
-		//		}
-		//		else
-		//		{
-		//			return;
-		//		}
-		//	}
-		//}
 	}
 }
