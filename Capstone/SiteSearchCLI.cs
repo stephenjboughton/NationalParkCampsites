@@ -52,6 +52,8 @@ namespace Capstone
 					DateTime fromDate, toDate;
 					// Calls method to choose dates
 					ChooseACampground(out fromDate, out toDate);
+					//ArrivalDate(out fromDate);
+					//DepartureDate(fromDate, out toDate);
 
 					//Calls DAL to build a dictionary of sites available for specified date range
 					SiteDAL siteDal = new SiteDAL(DatabaseConnection);
@@ -67,6 +69,8 @@ namespace Capstone
 							if (selection.ToLower() == "y")
 							{
 								ChooseACampground(out fromDate, out toDate);
+								//ArrivalDate(out fromDate);
+								//DepartureDate(fromDate, out toDate);
 							}
 
 							//Quit or Return to main menu
@@ -124,7 +128,7 @@ namespace Capstone
 							}
 						}
 					}
-					catch (Exception ex)
+					catch (Exception)
 					{
 						Console.WriteLine("The input is not valid");
 						break;
@@ -163,25 +167,25 @@ namespace Capstone
 			Console.Write("What is the departure date? ");
 			string inputToDate = Console.ReadLine();
 
-			
+
 			if (DateTime.TryParse(inputFromDate, out fromDate) && fromDate.Date > DateTime.Now)
 			{
-				
+
 
 			}
-			if  (DateTime.TryParse(inputToDate, out toDate) && toDate.Date > fromDate.Date)
+			if (DateTime.TryParse(inputToDate, out toDate) && toDate.Date > fromDate.Date)
 			{
-				
+
 			}
 			else
 			{
 				Console.WriteLine("Date Range Not Valid");
 				Console.WriteLine("Would You like to Continue? Y or N");
-				string selection =Console.ReadLine();
+				string selection = Console.ReadLine();
 				selection.ToLower();
-				if( selection == "y")
-				{ 
-				ChooseACampground(out fromDate, out toDate);
+				if (selection == "y")
+				{
+					ChooseACampground(out fromDate, out toDate);
 				}
 				else
 				{
@@ -189,5 +193,57 @@ namespace Capstone
 				}
 			}
 		}
+
+		//public void ArrivalDate(out DateTime fromDate)
+		//{
+		//	Console.Write("What is the arrival date? ");
+		//	string inputFromDate = Console.ReadLine();
+
+		//	if (DateTime.TryParse(inputFromDate, out fromDate) && fromDate.Date > DateTime.Now)
+		//	{
+		//	}
+		//	else
+		//	{
+		//		Console.WriteLine("Date Range Not Valid");
+		//		Console.WriteLine("Would You like to Continue? Y or N");
+		//		string selection = Console.ReadLine();
+		//		selection.ToLower();
+		//		if (selection == "y")
+		//		{
+		//			ArrivalDate(out fromDate);
+		//		}
+		//		else
+		//		{
+		//			return;
+		//		}
+		//	}
+		//}
+
+
+		//public void DepartureDate(DateTime fromDate, out DateTime toDate)
+		//{
+		//	Console.Write("What is the departure date? ");
+		//	string inputToDate = Console.ReadLine();
+
+		//	if (DateTime.TryParse(inputToDate, out toDate) && toDate.Date > fromDate.Date)
+		//	{
+
+		//	}
+		//	else
+		//	{
+		//		Console.WriteLine("Date Range Not Valid");
+		//		Console.WriteLine("Would You like to Continue? Y or N");
+		//		string selection = Console.ReadLine();
+		//		selection.ToLower();
+		//		if (selection == "y")
+		//		{
+		//			DepartureDate(fromDate, out toDate);
+		//		}
+		//		else
+		//		{
+		//			return;
+		//		}
+		//	}
+		//}
 	}
 }
