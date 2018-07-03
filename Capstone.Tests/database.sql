@@ -38,4 +38,5 @@ INSERT INTO reservation (reservation_id, site_id, name, from_date, to_date, crea
 INSERT INTO reservation (reservation_id, site_id, name, from_date, to_date, create_date) VALUES (3, 2, 'Test Reservation Three', '2018/06/01', '2018/06/05', '2018/03/15');
 INSERT INTO reservation (reservation_id, site_id, name, from_date, to_date, create_date) VALUES (4, 2, 'Test Reservation Four', '2018/06/15', '2018/06/21', '2018/04/12');
 INSERT INTO reservation (reservation_id, site_id, name, from_date, to_date, create_date) VALUES (5, 3, 'Test Reservation Four', '2018/05/01', '2018/09/01', '2018/04/12');
+INSERT INTO reservation (reservation_id, site_id, name, from_date, to_date, create_date) VALUES (6, 3, 'Test Reservation Five', '2018/07/15', '2018/09/01', '2018/04/30');
 SET IDENTITY_INSERT reservation OFF;

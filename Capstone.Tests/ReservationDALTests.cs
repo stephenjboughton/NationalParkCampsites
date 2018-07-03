@@ -18,7 +18,7 @@ namespace Capstone.Tests
 			//Act
 			var reservations = reservationDAL.GetAllReservations(1);
 			//Assert
-			Assert.AreEqual(5, reservations.Count);
+			Assert.AreEqual(6, reservations.Count);
 		}
 
 		[TestMethod]
@@ -41,6 +41,18 @@ namespace Capstone.Tests
 			//Assert
 			int finalRowCount = GetRowCount();
 			Assert.AreEqual(initialRowCount + 1, finalRowCount);
+		}
+
+		[TestMethod]
+		public void GetAllReservationsNextThirty_Test()
+		{
+			//Arrange
+			ReservationDAL reservationDAL = new ReservationDAL(ConnectionString);
+
+			//Act
+			var reservations = reservationDAL.GetAllReservationsNextThirty(1);
+			//Assert
+			Assert.AreEqual(1, reservations.Count);
 		}
 
 		private int GetRowCount()

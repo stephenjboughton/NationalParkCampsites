@@ -20,6 +20,53 @@ namespace Capstone.DAL
 		{
 			connectionString = dbConnectionString;
 		}
+		/// <summary>
+		/// Builds a dictionary of campgrounda Setting a numerical key to a campground object value
+		/// </summary>
+		/// <returns></returns>
+		public IDictionary<int, Reservation> GetAllReservationsNextThirty(int parkId)
+		{
+
+			Dictionary<int, Reservation> reservations = new Dictionary<int, Reservation>();
+
+			try
+			{
+				using (SqlConnection conn = new SqlConnection(connectionString))
+				{
+					conn.Open();
+
+					string sql = $"SELECT reservation.* FROM reservation INNER JOIN site ON reservation.site_id = site.site_id INNER JOIN campground ON site.campground_id = campground.campground_id WHERE park_id = @parkid AND from_date BETWEEN @todaysDate AND @thirtyDays";
+
+					SqlCommand cmd = new SqlCommand(sql, conn);
+
+					cmd.Parameters.AddWithValue("@parkid", parkId);
+					cmd.Parameters.AddWithValue("@todaysDate", DateTime.Now);
+					cmd.Parameters.AddWithValue("@thirtyDays", DateTime.Now.AddDays(30));
+
+					SqlDataReader reader = cmd.ExecuteReader();
+
+					int reservationDictionaryKey = 1;
+
+					while (reader.Read())
+					{
+						Reservation reservation = new Reservation();
+						reservation.ReservationId = Convert.ToInt32(reader["reservation_id"]);
+						reservation.SiteId = Convert.ToInt32(reader["site_id"]);
+						reservation.Name = Convert.ToString(reader["name"]);
+						reservation.FromDate = Convert.ToDateTime(reader["from_date"]);
+						reservation.ToDate = Convert.ToDateTime(reader["to_date"]);
+						reservation.CreateDate = Convert.ToDateTime(reader["create_date"]);
+
+						reservations[reservationDictionaryKey++] = reservation;
+					}
+				}
+			}
+			catch (SqlException ex)
+			{
+				Console.WriteLine(ex.Message);
+			}
+			return reservations;
+		}
 
 		/// <summary>
 		/// Builds a dictionary of campgrounda Setting a numerical key to a campground object value

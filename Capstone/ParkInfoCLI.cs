@@ -38,8 +38,9 @@ namespace Capstone
 				Console.WriteLine();
 				Console.WriteLine("Select a Command");
 				Console.WriteLine("  1) View Campgrounds");
-				Console.WriteLine("  2) Search for Reservation");
-				Console.WriteLine("  3) Return to Previous Screen");
+				Console.WriteLine("  2) View all reservations for this park in the next 30 days");
+				Console.WriteLine("  3) Search for Reservation");
+				Console.WriteLine("  4) Return to Previous Screen");
 
 				string input = Console.ReadLine();
 
@@ -48,9 +49,50 @@ namespace Capstone
 					//instantiate a campground list CLI and call campground display method
 					CampgroundListCLI campgroundList = new CampgroundListCLI();
 					return reservationMade = campgroundList.DisplayCampgrounds(park.Id);
-					
+
 				}
 				else if (input == "2")
+				{
+					ReservationDAL rDAL = new ReservationDAL(DatabaseConnection);
+					IDictionary<int, Reservation> UpcomingReservations = rDAL.GetAllReservationsNextThirty(park.Id);
+
+					if (UpcomingReservations.Count == 0)
+					{
+						Console.WriteLine("There are no reservations for this park within the next thirty days");
+						Console.Write("To return to a list of the parks, press Q ");
+						string userInput = Console.ReadLine().ToLower();
+						if (userInput == "q")
+						{
+							break;
+						}
+					}
+
+					else
+					{
+						Console.WriteLine();
+						Console.WriteLine("Here are all the reservations in the next thirty days at " + park.Name
+							+ " National Park");
+						Console.WriteLine("Site ID".PadRight(10) + "Name".PadRight(30) + "From Date".PadRight(15) + "To Date".PadRight(15) + "Creation Date".PadRight(15));
+						foreach (KeyValuePair<int, Reservation> reservation in UpcomingReservations)
+						{
+							Console.WriteLine(
+							reservation.Value.SiteId.ToString().PadRight(10) +
+							reservation.Value.Name.PadRight(30) +
+							reservation.Value.FromDate.ToShortDateString().PadRight(15) +
+							reservation.Value.ToDate.ToShortDateString().PadRight(15) +
+							reservation.Value.CreateDate.ToShortDateString().PadRight(15));
+						}
+
+						Console.Write("To return to a list of the parks, press Q ");
+						string userInput = Console.ReadLine().ToLower();
+						if (userInput == "q")
+						{
+							break;
+						}
+					}
+				}
+
+				else if (input == "3")
 				{
 					DateTime fromDate;
 					DateTime toDate;
@@ -76,7 +118,7 @@ namespace Capstone
 							site.Value.MaxOccupancy.ToString().PadRight(15) +
 							(site.Value.Accessible ? "Yes" : "No").PadRight(15) +
 							(site.Value.MaxRv == 0 ? "N/A" : site.Value.MaxRv.ToString()).PadRight(15) +
-							(site.Value.Utilities ? "Yes" : "No").PadRight(15) + 
+							(site.Value.Utilities ? "Yes" : "No").PadRight(15) +
 							(TotalDays(fromDate, toDate) * site.Value.DailyFee).ToString().PadRight(15));
 						}
 						Console.Write("Which site should be reserved(enter 0 to cancel)? ");
@@ -87,7 +129,7 @@ namespace Capstone
 							Thread.Sleep(2000);
 							break;
 						}
-						else if(AvailableSites.ContainsKey(siteToReserve))
+						else if (AvailableSites.ContainsKey(siteToReserve))
 						{
 							Console.Write("What name should the reservation be made under? ");
 							string reservationName = Console.ReadLine();
@@ -101,22 +143,22 @@ namespace Capstone
 							Console.WriteLine($"Press Enter to Return to Park List");
 							Console.ReadLine();
 							return reservationMade = true;
-							
-							
+
+
 						}
 						else
 						{
 							Console.Write("Please enter a valid selection");
 							Thread.Sleep(2000);
 						}
-						
+
 					}
 					catch (Exception ex)
 					{
 						Console.WriteLine("Please enter a valid selection");
 					}
 				}
-				else if (input == "3")
+				else if (input == "4")
 				{
 					break;
 				}

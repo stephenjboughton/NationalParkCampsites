@@ -169,8 +169,11 @@ namespace Capstone
 				{
 					isValid = true;
 				}
-				Console.WriteLine();
-				Console.WriteLine("Date range not valid, please select different dates.");
+				if (!isValid)
+				{
+					Console.WriteLine();
+					Console.WriteLine("Date range not valid, please select different dates.");
+				}
 			}
 		}
 	}
