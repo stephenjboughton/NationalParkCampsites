@@ -48,7 +48,11 @@ namespace Capstone
 				{
 					//instantiate a campground list CLI and call campground display method
 					CampgroundListCLI campgroundList = new CampgroundListCLI();
-					return reservationMade = campgroundList.DisplayCampgrounds(park.Id);
+					reservationMade = campgroundList.DisplayCampgrounds(park.Id);
+					if (reservationMade)
+					{
+						break;
+					}
 
 				}
 				else if (input == "2")

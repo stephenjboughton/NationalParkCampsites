@@ -95,7 +95,7 @@ namespace Capstone
 								(TotalDays(fromDate, toDate) * site.Value.DailyFee).ToString().PadRight(15));
 							}
 
-							//To Reserve a campground
+							//To Reserve a site
 							Console.WriteLine("Which site should be reserved(enter 0 to cancel)? ");
 							int siteToReserve = int.Parse(Console.ReadLine());
 							if (siteToReserve == 0)
