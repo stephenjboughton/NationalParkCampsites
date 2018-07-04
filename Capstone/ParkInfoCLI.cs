@@ -37,10 +37,10 @@ namespace Capstone
 
 				Console.WriteLine();
 				Console.WriteLine("Select a Command");
-				Console.WriteLine("  1) View Campgrounds");
+				Console.WriteLine("  1) View campgrounds");
 				Console.WriteLine("  2) View all reservations for this park in the next 30 days");
-				Console.WriteLine("  3) Search for Reservation");
-				Console.WriteLine("  4) Return to Previous Screen");
+				Console.WriteLine("  3) Search for reservation");
+				Console.WriteLine("  4) Return to previous screen");
 
 				string input = Console.ReadLine();
 

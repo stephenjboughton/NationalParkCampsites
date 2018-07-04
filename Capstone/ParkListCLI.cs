@@ -74,7 +74,7 @@ namespace Capstone.Models
 		private void ShowHeader()
 		{
 			//Ask user to select Park
-			Console.WriteLine("Select a Park for Further Details");
+			Console.WriteLine("Select a park for further details");
 		}
 
 		/// <summary>

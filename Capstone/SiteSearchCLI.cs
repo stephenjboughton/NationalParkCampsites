@@ -83,7 +83,7 @@ namespace Capstone
 						else
 						{
 							Console.WriteLine();
-							Console.WriteLine("Results Matching Your Search Criteria");
+							Console.WriteLine("Results matching your search criteria");
 							Console.WriteLine("Site No.".PadRight(10) + "Max Occup.".PadRight(15) + "Accessible?".PadRight(15) + "Max RV Length".PadRight(15) + "Utility".PadRight(15) + "Cost".PadRight(15));
 							foreach (KeyValuePair<int, Site> site in AvailableSites)
 							{

@@ -39,8 +39,8 @@ namespace Capstone
 				}
 				Console.WriteLine();
 				Console.WriteLine("Select A Command");
-				Console.WriteLine("1) Search for Available Reservation");
-				Console.WriteLine("2) Return to park list");
+				Console.WriteLine("1) Search for available reservation");
+				Console.WriteLine("2) Return to previous screen");
 
 				string campgroundChoice = Console.ReadLine();
 				Console.Clear();
