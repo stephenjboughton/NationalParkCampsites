@@ -45,7 +45,7 @@ namespace Capstone.DAL
 
 					SqlDataReader reader = cmd.ExecuteReader();
 
-					int campDictionaryKey = 1;
+					int campgroundKey = 1;
 
 					while (reader.Read())
 					{
@@ -57,7 +57,8 @@ namespace Capstone.DAL
 						camp.OpenTo = IntToMonth(Convert.ToInt32(reader["open_to_mm"]));
 						camp.DailyFee = Convert.ToDecimal(reader["daily_fee"]);
 
-						campgrounds[campDictionaryKey++] = camp;
+						campgrounds[campgroundKey] = camp;
+						campgroundKey++;
 					}
 				}
 			}

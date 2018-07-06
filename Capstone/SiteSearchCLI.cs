@@ -47,6 +47,7 @@ namespace Capstone
 				}
 				else if (campground.ContainsKey(campSelection))
 				{
+					int campId = campground[campSelection].Id;
 					//Holds input variables
 					DateTime fromDate, toDate;
 					// Calls method to choose dates
@@ -56,12 +57,12 @@ namespace Capstone
 					SiteDAL siteDal = new SiteDAL(DatabaseConnection);
 					try
 					{
-						IDictionary<int, Site> AvailableSites = siteDal.GetAvailableSites(campSelection, fromDate, toDate);
+						IDictionary<int, Site> AvailableSites = siteDal.GetAvailableSites(campId, fromDate, toDate);
 						//if there are no available sites ask them for an alternate date range
 						if (AvailableSites.Count == 0)
 						{
 							Console.WriteLine("There are no available sites.");
-							Console.Write("Would you like to select another date range? Y or N");
+							Console.Write("Would you like to select another date range? Y or N ");
 							string selection = Console.ReadLine();
 							if (selection.ToLower() == "y")
 							{
